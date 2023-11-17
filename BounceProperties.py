@@ -10,8 +10,8 @@ pygame.display.set_caption("Bounce Maze Game")
 
 class Ball:
     def __init__(self):
-        self.x = WIDTH // 2
-        self.y = HEIGHT // 2
+        self.x = WIDTH // 8
+        self.y = HEIGHT // 8
         self.radius = 10
         self.color = pygame.Color('black')
         self.velocity = [0, 0]  # Adjust as needed
@@ -23,10 +23,20 @@ class Ball:
 class Maze:
     def __init__(self):
         self.walls = [
+            pygame.Rect(0, 0, 20, HEIGHT),  # Left border
+            pygame.Rect(0, 0, WIDTH, 20),  # Top border
+            pygame.Rect(WIDTH - 20, 0, 20, HEIGHT),  # Right border
+            pygame.Rect(0, HEIGHT - 20, WIDTH, 20),  # Bottom border
             pygame.Rect(100, 100, 200, 20),
             pygame.Rect(300, 200, 20, 200),
             pygame.Rect(100, 300, 200, 20),
             pygame.Rect(400, 100, 20, 200),
+            pygame.Rect(200, 400, 200, 20),
+            pygame.Rect(500, 300, 20, 200),
+            pygame.Rect(400, 400, 200, 20),
+            pygame.Rect(100, 500, 20, 100),
+            pygame.Rect(300, 500, 400, 20),
+            pygame.Rect(500, 100, 20, 200)
         ]
 
     def draw(self):
