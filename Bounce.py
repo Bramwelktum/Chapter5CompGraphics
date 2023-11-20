@@ -32,13 +32,26 @@ class Ball:
             self.x = WIDTH - 8
 
 
-class Maze:
-    def __init__(self):
-        self.walls = []
-
-    def draw(self):
-        for wall in self.walls:
-            pygame.draw.rect(screen, pygame.Color('brown'), wall)
+# Add this import at the beginning of your code
+# enemy_img = pygame.image.load('BounceGamePhotos/enemy.jpg')
+# enemy_img = pygame.transform.scale(enemy_img, (100, 100))
+#
+#
+# class Enemy:
+#     def __init__(self):
+#         self.x = WIDTH - 60
+#         self.y = 480
+#         self.width = 50
+#         self.height = 50
+#         self.velocity = -2  # Adjust as needed
+#
+#     def draw(self):
+#         screen.blit(enemy_img, (self.x, self.y))
+#
+#     def move(self):
+#         self.x += self.velocity
+#         if self.x <= 0 or self.x >= WIDTH - self.width:
+#             self.velocity *= -1  # Reverse direction when hitting the window edges
 
 
 def start_menu():
@@ -70,6 +83,7 @@ def game_loop():
     clock = pygame.time.Clock()
 
     ball = Ball()
+    # enemy = Enemy()
     jumping = False
     jump_count = 7
 
@@ -94,7 +108,6 @@ def game_loop():
 
 
             elif event.type == pygame.KEYUP:
-
                 if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                     ball.velocity[0] = 0
                 # elif event.key == pygame.K_UP or event.key == pygame.K_DOWN:
@@ -117,6 +130,8 @@ def game_loop():
         # Draw everything
 
         ball.draw()
+        # enemy.draw()
+        # enemy.move()
         ball.ball_limits()
         pygame.display.flip()
 
