@@ -1,9 +1,14 @@
 import pygame
 import math
-
 from BounceBall import Ball
 
 pygame.init()
+pygame.mixer.init()
+
+# Load and play the music
+pygame.mixer.music.load('BounceGameMusic/trapbeat.mp3')  # Replace 'path_to_your_music_file.mp3' with the actual file path
+pygame.mixer.music.set_volume(0.5)  # Adjust the volume as needed
+pygame.mixer.music.play(-1)  # -1 means the music will loop indefinitely
 
 # GAME WINDOW
 WIDTH, HEIGHT = 1200, 600
@@ -19,6 +24,7 @@ ground_height = ground_img.get_height()
 tiles = math.ceil((WIDTH / ground_width)) + 1
 print(tiles)
 scroll = 0
+
 # Set up fonts
 start_font = pygame.font.Font(None, 36)
 close_font = pygame.font.Font(None, 26)
@@ -29,6 +35,7 @@ def draw_text(text, font, color, x, y):
     text_surface = font.render(text, True, color)
     text_rect = text_surface.get_rect(center=(x, y))
     screen.blit(text_surface, text_rect)
+
 
 def start_menu():
     draw_text("Press SPACE to start", start_font, pygame.Color('white'), WIDTH // 2, HEIGHT // 2)
@@ -46,7 +53,6 @@ def start_menu():
                 elif event.key == pygame.K_ESCAPE:
                     pygame.quit()
                     quit()
-
 
 
 def game_loop(scroll):
@@ -112,4 +118,8 @@ def game_loop(scroll):
 
 start_menu()
 game_loop(scroll)
+
+# Stop the music before quitting
+pygame.mixer.music.stop()
+
 pygame.quit()
