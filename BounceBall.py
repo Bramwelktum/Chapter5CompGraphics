@@ -3,7 +3,7 @@ import pygame
 
 class Ball:
     def __init__(self):
-        self.x = 40
+        self.x = 100
         self.y = 480
         self.radius = 10
         self.color = pygame.Color('black')
@@ -19,5 +19,5 @@ class Ball:
             self.y = 8
         if self.x <= 8:
             self.x = 8
-        if self.x > WIDTH - 8:
-            self.x = WIDTH - 8
+        if self.x > WIDTH - WIDTH // 4:
+            self.x = WIDTH - WIDTH // 4
