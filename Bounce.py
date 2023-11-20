@@ -74,9 +74,10 @@ def game_loop(scroll):
                 running = False
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
-                    ball.velocity[0] = -2
+                    ball.velocity[0] = -1
+
                 elif event.key == pygame.K_RIGHT:
-                    ball.velocity[0] = 2
+                    ball.velocity[0] = .5
                     scroll_change -= 10
                 elif event.key == pygame.K_UP and not jumping:
                     jumping = True
