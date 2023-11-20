@@ -1,16 +1,24 @@
 import pygame
+import math
 
 from BounceBall import Ball
 
 pygame.init()
 
 # GAME WINDOW
-WIDTH, HEIGHT = 800, 600
+WIDTH, HEIGHT = 1200, 600
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Bounce Maze Game")
+
 ground_img = pygame.image.load('BounceGamePhotos/ground.png')
 ground_img = pygame.transform.scale(ground_img, (WIDTH, HEIGHT // 4))
+ground_width = ground_img.get_width()
+ground_height = ground_img.get_height()
 
+# game variable
+tiles = math.ceil((WIDTH / ground_width)) + 1
+print(tiles)
+scroll = 0
 # Set up fonts
 start_font = pygame.font.Font(None, 36)
 close_font = pygame.font.Font(None, 26)
@@ -21,7 +29,6 @@ def draw_text(text, font, color, x, y):
     text_surface = font.render(text, True, color)
     text_rect = text_surface.get_rect(center=(x, y))
     screen.blit(text_surface, text_rect)
-
 
 def start_menu():
     draw_text("Press SPACE to start", start_font, pygame.Color('white'), WIDTH // 2, HEIGHT // 2)
@@ -41,18 +48,26 @@ def start_menu():
                     quit()
 
 
-def game_loop():
+
+def game_loop(scroll):
     running = True
     clock = pygame.time.Clock()
 
     ball = Ball()
     jumping = False
     jump_count = 7
+    scroll_change = 0
     paused = False
 
     while running:
         screen.fill((2, 125, 125))
         screen.blit(ground_img, (0, 480))
+        scroll += scroll_change
+        for i in range(0, tiles):
+            screen.blit(ground_img, (i * ground_width + scroll, 480))
+
+        if abs(scroll) > ground_width:
+            scroll = 0
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -62,6 +77,7 @@ def game_loop():
                     ball.velocity[0] = -2
                 elif event.key == pygame.K_RIGHT:
                     ball.velocity[0] = 2
+                    scroll_change -= 10
                 elif event.key == pygame.K_UP and not jumping:
                     jumping = True
                 elif event.key == pygame.K_p:
@@ -69,6 +85,7 @@ def game_loop():
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                     ball.velocity[0] = 0
+                    scroll_change = 0
 
         if not paused:
             if jumping:
@@ -93,5 +110,5 @@ def game_loop():
 
 
 start_menu()
-game_loop()
+game_loop(scroll)
 pygame.quit()
