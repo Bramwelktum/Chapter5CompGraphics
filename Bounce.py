@@ -4,20 +4,32 @@ pygame.init()
 
 # GAME WINDOW
 WIDTH, HEIGHT = 800, 600
-win = pygame.display.set_mode((WIDTH, HEIGHT))
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Bounce Maze Game")
+ground_img = pygame.image.load('BounceGamePhotos/ground.png')
+ground_img = pygame.transform.scale(ground_img, (WIDTH, HEIGHT // 4))
 
 
 class Ball:
     def __init__(self):
         self.x = 40
-        self.y = 40
-        self.radius = 8
-        self.color = pygame.Color('blue')
-        self.velocity = [0, 0]  # Adjust as needed
+        self.y = 480
+        self.radius = 10
+        self.color = pygame.Color('black')
+        self.velocity = [0, 1]  # Adjust as needed
 
     def draw(self):
-        pygame.draw.circle(win, self.color, (self.x, self.y), self.radius)
+        pygame.draw.circle(screen, self.color, (self.x, self.y), self.radius)
+
+    def ball_limits(self):
+        if self.y >= 480:
+            self.y = 480
+        if self.y <= 8:
+            self.y = 8
+        if self.x <= 8:
+            self.x = 8
+        if self.x > WIDTH - 8:
+            self.x = WIDTH - 8
 
 
 class Maze:
@@ -26,7 +38,7 @@ class Maze:
 
     def draw(self):
         for wall in self.walls:
-            pygame.draw.rect(win, pygame.Color('brown'), wall)
+            pygame.draw.rect(screen, pygame.Color('brown'), wall)
 
 
 def start_menu():
@@ -36,8 +48,8 @@ def start_menu():
     text_close = close_font.render("Press ESCAPE to close", True, pygame.Color('red'))
     text_start_rect = text_start.get_rect(center=(WIDTH // 2, HEIGHT // 2))
     text_close_rect = text_close.get_rect(center=(400, 550))
-    win.blit(text_start, text_start_rect)
-    win.blit(text_close, text_close_rect)
+    screen.blit(text_start, text_start_rect)
+    screen.blit(text_close, text_close_rect)
     pygame.display.flip()
     waiting = True
     while waiting:
@@ -58,9 +70,14 @@ def game_loop():
     clock = pygame.time.Clock()
 
     ball = Ball()
+    jumping = False
+    jump_count = 7
 
     while running:
+        screen.fill((2, 125, 125))
+        screen.blit(ground_img, (0, 480))
         for event in pygame.event.get():
+
             if event.type == pygame.QUIT:
                 running = False
 
@@ -70,26 +87,37 @@ def game_loop():
                     ball.velocity[0] = -2
                 elif event.key == pygame.K_RIGHT:
                     ball.velocity[0] = 2
-                elif event.key == pygame.K_UP:
-                    ball.velocity[1] = -2
-                elif event.key == pygame.K_DOWN:
-                    ball.velocity[1] = 2
+                elif event.key == pygame.K_UP and not jumping:
+                    jumping = True
+                # elif event.key == pygame.K_DOWN:
+                #     ball.velocity[1] = 2
 
 
             elif event.type == pygame.KEYUP:
+
                 if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                     ball.velocity[0] = 0
-                elif event.key == pygame.K_UP or event.key == pygame.K_DOWN:
-                    ball.velocity[1] = 0
+                # elif event.key == pygame.K_UP or event.key == pygame.K_DOWN:
+                #     ball.velocity[1] = 0
 
+        if jumping:
+            if jump_count >= -7:
+                neg = 1
+                if jump_count < 0:
+                    neg = -1
+                ball.y -= (jump_count ** 2) * .5 * neg
+                jump_count -= 1
+            else:
+                jumping = False
+                jump_count = 7
         # Update ball position based on velocity
         ball.x += ball.velocity[0]
         ball.y += ball.velocity[1]
 
         # Draw everything
-        win.fill(pygame.Color('white'))
-        ball.draw()
 
+        ball.draw()
+        ball.ball_limits()
         pygame.display.flip()
 
         clock.tick(60)  # Adjust the frame rate as needed
