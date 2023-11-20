@@ -58,7 +58,7 @@ def start_menu():
     start_font = pygame.font.Font(None, 36)
     close_font = pygame.font.Font(None, 26)
     text_start = start_font.render("Press SPACE to start", True, pygame.Color('white'))
-    text_close = close_font.render("Press ESCAPE to close", True, pygame.Color('red'))
+    text_close = close_font.render("Press ESCAPE to close", True, pygame.Color('green'))
     text_start_rect = text_start.get_rect(center=(WIDTH // 2, HEIGHT // 2))
     text_close_rect = text_close.get_rect(center=(400, 550))
     screen.blit(text_start, text_start_rect)
@@ -86,6 +86,7 @@ def game_loop():
     # enemy = Enemy()
     jumping = False
     jump_count = 7
+    paused = False
 
     while running:
         screen.fill((2, 125, 125))
@@ -103,8 +104,9 @@ def game_loop():
                     ball.velocity[0] = 2
                 elif event.key == pygame.K_UP and not jumping:
                     jumping = True
-                # elif event.key == pygame.K_DOWN:
-                #     ball.velocity[1] = 2
+                elif event.key == pygame.K_p:
+                    paused = not paused
+
 
 
             elif event.type == pygame.KEYUP:
@@ -112,27 +114,31 @@ def game_loop():
                     ball.velocity[0] = 0
                 # elif event.key == pygame.K_UP or event.key == pygame.K_DOWN:
                 #     ball.velocity[1] = 0
+        if not paused:
+            if jumping:
+                if jump_count >= -7:
+                    neg = 1
+                    if jump_count < 0:
+                        neg = -1
+                    ball.y -= (jump_count ** 2) * .5 * neg
+                    jump_count -= 1
+                else:
+                    jumping = False
+                    jump_count = 7
+            # Update ball position based on velocity
+            ball.x += ball.velocity[0]
+            ball.y += ball.velocity[1]
+            ball.draw()
+            # enemy.draw()
+            # enemy.move()
+            ball.ball_limits()
 
-        if jumping:
-            if jump_count >= -7:
-                neg = 1
-                if jump_count < 0:
-                    neg = -1
-                ball.y -= (jump_count ** 2) * .5 * neg
-                jump_count -= 1
-            else:
-                jumping = False
-                jump_count = 7
-        # Update ball position based on velocity
-        ball.x += ball.velocity[0]
-        ball.y += ball.velocity[1]
+        if paused:
+            pause_font = pygame.font.Font(None, 36)
+            text_pause = pause_font.render("Game Paused...", True, pygame.Color('white'))
+            text_pause_rect = text_pause.get_rect(center=(WIDTH // 2, HEIGHT // 2))
+            screen.blit(text_pause, text_pause_rect)
 
-        # Draw everything
-
-        ball.draw()
-        # enemy.draw()
-        # enemy.move()
-        ball.ball_limits()
         pygame.display.flip()
 
         clock.tick(60)  # Adjust the frame rate as needed
