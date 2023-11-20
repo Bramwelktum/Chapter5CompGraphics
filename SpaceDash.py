@@ -94,39 +94,8 @@ def game_over():
     screen.blit(over_text, (200, 250))
 
 
-running = True
-while running:
-    screen.fill((2, 0, 128))
-    screen.blit(background_img, (0, 0))
-
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-        # ACTIONS
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_LEFT:
-                playerX_change = -.4
-            elif event.key == pygame.K_RIGHT:
-                playerX_change = .4
-            elif event.key == pygame.K_UP:
-                playerY_change = -.4
-            elif event.key == pygame.K_DOWN:
-                playerY_change = .4
-            if event.key == pygame.K_SPACE:
-                if ball_state == "ready":
-                    ball_sound = mixer.Sound('Pop Bubble Sound Effect 2022.wav')
-                    ball_sound.play()
-                    ballX = playerX
-                    fire_ball(ballX, ballY)
-
-        if event.type == pygame.KEYUP:
-            if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT or event.key == pygame.K_UP or event.key == pygame.K_DOWN:
-                playerX_change = 0
-                playerY_change = 0
-
-    playerX += playerX_change
-    playerY += playerY_change
-
+def player_limit():
+    global ball_state, playerX, ballY, playerX_change, playerY_change, playerY, ballX
     if playerX < 0:
         playerX = 0
     elif playerX > (screen_width - playerImgW):
@@ -137,6 +106,9 @@ while running:
     elif playerY > (screen_height - playerImgH):
         playerY = (screen_height - playerImgH)
 
+
+def enemy_handler():
+    global ball_state, playerX, ballY, playerX_change, playerY_change, playerY, ballX, score_value
     for i in range(num_of_enemies):
         if enemyY[i] > playerY:
             for j in range(num_of_enemies):
@@ -166,14 +138,57 @@ while running:
 
         enemy(enemyX[i], enemyY[i], i)
 
-    if ballY <= 0:
-        ballY = 480
-        ball_state = "ready"
 
-    if ball_state == "fire":
-        fire_ball(ballX, ballY)
-        ballY -= ballY_change
+def game_loop():
+    global ball_state, playerX, ballY, playerX_change, playerY_change, playerY, ballX
+    running = True
+    while running:
+        screen.fill((2, 0, 128))
+        screen.blit(background_img, (0, 0))
 
-    player(playerX, playerY)
-    show_score(textX, textY)
-    pygame.display.update()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            # ACTIONS
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT:
+                    playerX_change = -.4
+                elif event.key == pygame.K_RIGHT:
+                    playerX_change = .4
+                elif event.key == pygame.K_UP:
+                    playerY_change = -.4
+                elif event.key == pygame.K_DOWN:
+                    playerY_change = .4
+                if event.key == pygame.K_SPACE:
+                    if ball_state == "ready":
+                        ball_sound = mixer.Sound('Pop Bubble Sound Effect 2022.wav')
+                        ball_sound.play()
+                        ballX = playerX
+                        fire_ball(ballX, ballY)
+
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT or event.key == pygame.K_UP or event.key == pygame.K_DOWN:
+                    playerX_change = 0
+                    playerY_change = 0
+
+        playerX += playerX_change
+        playerY += playerY_change
+
+        player_limit()
+
+        enemy_handler()
+
+        if ballY <= 0:
+            ballY = 480
+            ball_state = "ready"
+
+        if ball_state == "fire":
+            fire_ball(ballX, ballY)
+            ballY -= ballY_change
+
+        player(playerX, playerY)
+        show_score(textX, textY)
+        pygame.display.update()
+
+
+game_loop()
