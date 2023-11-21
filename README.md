@@ -1,23 +1,32 @@
-# Bounce Game with Pygame
-
+# Bounce
 
 Welcome to the Bounce Game project developed using the Pygame library!
 
-## Introduction
+![Alt text](app.png?raw=true "Bounce")
 
-This project aims to create a simple implementation of the classic Bounce game in Python using the Pygame library. The game involves a bouncing ball and a paddle controlled by the player.
+## How to Download
 
-![Bounce Game Preview](link-to-preview-image.png)
+Download this project from here [Download Bounce](https://downgit.github.io/#/home?url=https://github.com/pyGuru123/Python-Games/tree/master/Bounce)
 
-## Pygame Basics
+## Requirements
 
-### Overview
+Use the package manager [pip](https://pip.pypa.io/en/stable/) to install following packages :-
+* Pygame
 
-Pygame is a powerful Python library designed for game development. It provides essential features such as window creation, user input handling, and graphics rendering, making it accessible for both beginners and experienced developers.
+```bash
+pip install pygame
+```
 
-### Getting Started
+## Usage
 
-```python
-import pygame
-pygame.init()
-# Pygame code here
+Download and click main.py to run the game, Click play and then select the level to start playing the level. Certain levels are locked and will be unlocked as you move forward in the game. Remember to take all the lifes in order to open the exit gates. Checkpoints can help you to bypass dangerous areas.
+
+Controls:
+* Left arrow key to go left
+* Right arrow key to go right
+* Up arrow key to jump
+* press ESC to escape the game
+
+## Contributing
+
+This game currently has a lot of bugs, if yiu think you can fix them, pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
