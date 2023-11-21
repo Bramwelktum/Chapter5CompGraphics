@@ -4,7 +4,7 @@ Welcome to the Bounce Game project developed using the Pygame library!
 
 ## Introduction
 
-This project aims to create a simple implementation of the classic Bounce game in Python using the Pygame library. The game involves a bouncing ball and a paddle controlled by the player.
+This project aims to create a simple implementation of classic Bounce game in Python using the Pygame library. The game involves a bouncing ball and a paddle controlled by the player.
 
 ![Bounce Game Preview](link-to-preview-image.png)
 
