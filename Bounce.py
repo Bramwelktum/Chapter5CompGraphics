@@ -160,7 +160,8 @@ def game_loop(scroll):
                     ball.velocity[0] = -1
                 elif event.key == pygame.K_RIGHT:
                     ball.velocity[0] = .5
-                    scroll_change -= 10
+                    if not paused:
+                        scroll_change -= 10
                 elif event.key == pygame.K_UP and not jumping:
                     jumping = True
                 elif event.key == pygame.K_p:
