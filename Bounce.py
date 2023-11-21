@@ -1,12 +1,12 @@
 import math
 import random
-
 import pygame
 # import pygame_gui
 from pygame.locals import K_F1, K_F2, K_F3
-
+import ObstacleClass
 from BounceBall import Ball
 from CoinClass import Coin
+from ObstacleClass import Obstacle
 
 pygame.init()
 pygame.mixer.init()
@@ -78,7 +78,7 @@ def start_menu():
 
 def isCollision(object1X, object2X):
     distance = math.sqrt(math.pow((object1X - object2X), 2) + 0)
-    if distance < 5:
+    if distance < 27:
         return True
     else:
         return False
@@ -152,10 +152,26 @@ def game_loop(scroll):
     coin4 = Coin(coin_img)
     coin5 = Coin(coin_img)
     coinsList = [coin1, coin2, coin3, coin4, coin5]
+
+    obstacle1 = Obstacle(300, 450, 100, 50)
+    obstacle2 = Obstacle(350, 400, 50, 50)
+    obstacle3 = Obstacle(400, 400, 100, 100)
+
+
+    obstacleGroup1 = [obstacle1, obstacle2, obstacle3]
+    obstacleGroup2 = [
+        Obstacle(600, 450, 100, 50),
+        Obstacle(650, 400, 50, 50),
+        Obstacle(700, 400, 100, 100)
+    ]
+
+    obstacleList = [obstacleGroup1, obstacleGroup2]
+
     jumping = False
     jump_count = 8
     scroll_change = 0
     coin_imgX_change = 0
+    obstacleX_change = 0
     score_value = 0
     paused = False
 
@@ -163,9 +179,7 @@ def game_loop(scroll):
         screen.fill((2, 125, 125))
         screen.blit(ground_img, (0, 480))
         scroll += scroll_change
-        obstacle0 = pygame.draw.rect(screen, (255, 255, 255), [obstacles[0], 470, 40, 30])
-        obstacle1 = pygame.draw.rect(screen, (255, 255, 255), [obstacles[1], 470, 40, 30])
-        obstacle2 = pygame.draw.rect(screen, (255, 255, 255), [obstacles[2], 470, 40, 30])
+
 
         score = control_font.render("Score :" + score_value.__str__(), True, (255, 0, 0))
         screen.blit(score, (10, 10))
@@ -177,6 +191,18 @@ def game_loop(scroll):
             if coinCollection:
                 coin.x = random.randint(800, 1800)
                 score_value += 1
+
+        for obstacleGroup in obstacleList:
+            for obstacle in obstacleGroup:
+                obstacle.x += obstacleX_change
+                if obstacle.x < 1:
+                    obstacle.x = random.randint(1000, 1200)
+                hitWallCollision = isCollision(obstacle.x, ball.x)
+                if hitWallCollision:
+                    ball.x = obstacle.x
+
+
+
 
         for i in range(0, tiles):
             screen.blit(ground_img, (i * ground_width + scroll, 480))
@@ -196,6 +222,7 @@ def game_loop(scroll):
                     if not paused:
                         scroll_change -= 10
                         coin_imgX_change -= 10
+                        obstacleX_change -= 10
                 elif event.key == pygame.K_UP and not jumping:
                     jumping = True
                 elif event.key == pygame.K_p:
@@ -211,18 +238,8 @@ def game_loop(scroll):
                     ball.velocity[0] = 0
                     scroll_change = 0
                     coin_imgX_change = 0
+                    obstacleX_change = 0
         check_volume_control()
-
-        for i in range(len(obstacles)):
-            if active:
-                obstacles[i] -= obstacles_speed
-                if obstacles[i] < -20:
-                    obstacles[i] = random.randint(470, 570)
-                ball_circle = pygame.Rect(ball.x - ball.radius, ball.y - ball.radius, 2 * ball.radius,
-                                          2 * ball.radius)
-                if ball_circle.colliderect(obstacle0) or ball_circle.colliderect(
-                        obstacle1) or ball_circle.colliderect(obstacle2):
-                    active = False
 
         if not paused:
             if jumping:
@@ -244,6 +261,13 @@ def game_loop(scroll):
             coin3.draw(screen)
             coin4.draw(screen)
             coin5.draw(screen)
+
+            for obstacleGroup in obstacleList:
+                for obstacle in obstacleGroup:
+                    obstacle.draw_obstacle(screen)
+            # obstacle1.draw_obstacle(screen)
+            # obstacle2.draw_obstacle(screen)
+            # obstacle3.draw_obstacle(screen)
 
         if paused:
             for event in pygame.event.get():
@@ -270,6 +294,6 @@ def game_loop(scroll):
 
 
 # Call start_menu, controls_menu, and game_loop
-start_menu()
-controls_menu()
+# start_menu()
+# controls_menu()
 game_loop(scroll)
