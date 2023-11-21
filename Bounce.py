@@ -160,9 +160,9 @@ def game_loop(scroll):
 
     obstacleGroup1 = [obstacle1, obstacle2, obstacle3]
     obstacleGroup2 = [
-        Obstacle(random.randint(600, 1200), 450, 100, 50),
-        Obstacle(random.randint(600, 1200), 400, 50, 50),
-        Obstacle(random.randint(600, 1200), 400, 100, 100)
+        Obstacle(600, 450, 100, 50),
+        Obstacle(650, 400, 50, 50),
+        Obstacle(700, 400, 100, 100)
     ]
 
     obstacleList = [obstacleGroup1, obstacleGroup2]
@@ -192,20 +192,16 @@ def game_loop(scroll):
                 coin.x = random.randint(800, 1800)
                 score_value += 1
 
-        # for obstacleGroup in obstacleList:
-        #     for obstacle in obstacleGroup:
-        #         obstacle.x += obstacleX_change
-        #         hitWallCollision = isCollision(obstacle.x, ball.x)
-        #         if hitWallCollision:
-        #             ball.x = obstacle.x
-
-            for obstacle in obstacleGroup1:
+        for obstacleGroup in obstacleList:
+            for obstacle in obstacleGroup:
                 obstacle.x += obstacleX_change
                 if obstacle.x < 1:
                     obstacle.x = random.randint(1000, 1200)
                 hitWallCollision = isCollision(obstacle.x, ball.x)
                 if hitWallCollision:
                     ball.x = obstacle.x
+
+
 
 
         for i in range(0, tiles):
@@ -226,7 +222,7 @@ def game_loop(scroll):
                     if not paused:
                         scroll_change -= 10
                         coin_imgX_change -= 10
-                        obstacleX_change -= 2
+                        obstacleX_change -= 10
                 elif event.key == pygame.K_UP and not jumping:
                     jumping = True
                 elif event.key == pygame.K_p:
@@ -266,12 +262,12 @@ def game_loop(scroll):
             coin4.draw(screen)
             coin5.draw(screen)
 
-            # for obstacleGroup in obstacleList:
-            #     for obstacle in obstacleGroup:
-            #         obstacle.draw_obstacle(screen)
-            obstacle1.draw_obstacle(screen)
-            obstacle2.draw_obstacle(screen)
-            obstacle3.draw_obstacle(screen)
+            for obstacleGroup in obstacleList:
+                for obstacle in obstacleGroup:
+                    obstacle.draw_obstacle(screen)
+            # obstacle1.draw_obstacle(screen)
+            # obstacle2.draw_obstacle(screen)
+            # obstacle3.draw_obstacle(screen)
 
         if paused:
             for event in pygame.event.get():
