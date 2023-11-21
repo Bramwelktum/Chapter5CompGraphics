@@ -1,9 +1,5 @@
 # Bounce
 
-[![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com)
-[![forthebadge](https://forthebadge.com/images/badges/built-with-swag.svg)](https://forthebadge.com)
-[![forthebadge](https://forthebadge.com/images/badges/made-with-python.svg)](https://forthebadge.com)
-
 Bounce is a clone of Nokia original bounce game made with python and pygame. I have tried to keep the maximum features of the original game in this version
 
 ![Alt text](app.png?raw=true "Bounce")
