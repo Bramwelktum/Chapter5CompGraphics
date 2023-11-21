@@ -1,13 +1,16 @@
+import random
+
 import pygame
 import math
 from BounceBall import Ball
+from CoinClass import Coin
 
 pygame.init()
 pygame.mixer.init()
 
 # Load and play the music
 pygame.mixer.music.load('BounceGameMusic/trapbeat.mp3')  # Replace 'path_to_your_music_file.mp3' with the actual file path
-pygame.mixer.music.set_volume(0.5)  # Adjust the volume as needed
+pygame.mixer.music.set_volume(0.2)  # Adjust the volume as needed
 pygame.mixer.music.play(-1)  # -1 means the music will loop indefinitely
 
 # GAME WINDOW
@@ -29,6 +32,14 @@ scroll = 0
 start_font = pygame.font.Font(None, 36)
 close_font = pygame.font.Font(None, 26)
 pause_font = pygame.font.Font(None, 36)
+
+#coins
+coin_img = pygame.image.load("BounceGamePhotos/dollar.png")
+
+
+
+
+
 
 
 def draw_text(text, font, color, x, y):
@@ -54,21 +65,43 @@ def start_menu():
                     pygame.quit()
                     quit()
 
+def isCollision(object1X, object2X):
+    distance = math.sqrt(math.pow((object1X - object2X), 2) + 0)
+    if distance < 15:
+        return True
+    else:
+        return False
 
 def game_loop(scroll):
     running = True
     clock = pygame.time.Clock()
 
     ball = Ball()
+    coin1 = Coin(coin_img)
+    coin2 = Coin(coin_img)
+    coin3 = Coin(coin_img)
+    coin4 = Coin(coin_img)
+    coin5 = Coin(coin_img)
+    coinsList = [coin1, coin2, coin3, coin4, coin5]
     jumping = False
     jump_count = 7
     scroll_change = 0
+    coin_imgX_change = 0
     paused = False
 
     while running:
         screen.fill((2, 125, 125))
         screen.blit(ground_img, (0, 480))
         scroll += scroll_change
+
+        for coin in coinsList:
+            coin.x += coin_imgX_change
+
+            # check if ball and coin collide i.e coin is collected
+            coinCollection = isCollision(coin.x, ball.x)
+            if coinCollection:
+                coin.x = random.randint(800, 1800)
+
         for i in range(0, tiles):
             screen.blit(ground_img, (i * ground_width + scroll, 480))
 
@@ -85,6 +118,7 @@ def game_loop(scroll):
                 elif event.key == pygame.K_RIGHT:
                     ball.velocity[0] = .5
                     scroll_change -= 10
+                    coin_imgX_change -= 10
                 elif event.key == pygame.K_UP and not jumping:
                     jumping = True
                 elif event.key == pygame.K_p:
@@ -93,6 +127,7 @@ def game_loop(scroll):
                 if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                     ball.velocity[0] = 0
                     scroll_change = 0
+                    coin_imgX_change = 0
 
         if not paused:
             if jumping:
@@ -108,6 +143,15 @@ def game_loop(scroll):
             ball.y += ball.velocity[1]
             ball.draw(screen)
             ball.ball_limits(WIDTH)
+
+            coin1.draw(screen)
+            coin2.draw(screen)
+            coin3.draw(screen)
+            coin4.draw(screen)
+            coin5.draw(screen)
+
+
+
 
         if paused:
             draw_text("Game Paused...", pause_font, pygame.Color('white'), WIDTH // 2, HEIGHT // 2)
