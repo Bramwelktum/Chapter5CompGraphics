@@ -1,6 +1,5 @@
-import random
-import pygame
 import math
+import random
 
 import pygame
 # import pygame_gui
@@ -13,10 +12,10 @@ pygame.init()
 pygame.mixer.init()
 
 # Load and play the music
-pygame.mixer.music.load('BounceGameMusic/trapbeat.mp3')  # Replace 'path_to_your_music_file.mp3' with the actual file path
+pygame.mixer.music.load(
+    'BounceGameMusic/trapbeat.mp3')  # Replace 'path_to_your_music_file.mp3' with the actual file path
 pygame.mixer.music.set_volume(0.2)  # Adjust the volume as needed
 pygame.mixer.music.play(-1)  # -1 means the music will loop indefinitely
-
 
 # GAME WINDOW
 WIDTH, HEIGHT = 1200, 600
@@ -39,12 +38,16 @@ start_font = pygame.font.Font(None, 36)
 close_font = pygame.font.Font(None, 26)
 pause_font = pygame.font.Font(None, 36)
 
-
-#coins
+# coins
 coin_img = pygame.image.load("BounceGamePhotos/dollar.png")
 # Set initial volume and volume step
 volume = 0.5
 volume_step = 0.1
+
+# obstacles
+obstacles = [300, 450, 600]
+obstacles_speed = 2
+active = True
 
 
 def draw_text(text, font, color, x, y):
@@ -70,6 +73,7 @@ def start_menu():
                     pygame.quit()
                     quit()
 
+
 def isCollision(object1X, object2X):
     distance = math.sqrt(math.pow((object1X - object2X), 2) + 0)
     if distance < 15:
@@ -77,11 +81,12 @@ def isCollision(object1X, object2X):
     else:
         return False
 
+
 def controls_menu():
     screen.fill((2, 125, 125))
     draw_text("Controls:", start_font, pygame.Color('white'), WIDTH // 2, HEIGHT // 6)
-    draw_text("LEFT ARROW: Move Left", control_font, pygame.Color('white'), WIDTH // 2, HEIGHT // 3)
-    draw_text("RIGHT ARROW: Move Right", control_font, pygame.Color('white'), WIDTH // 2, HEIGHT // 3 + 30)
+    # draw_text("LEFT ARROW: Move Left", control_font, pygame.Color('white'), WIDTH // 2, HEIGHT // 3)
+    # draw_text("RIGHT ARROW: Move Right", control_font, pygame.Color('white'), WIDTH // 2, HEIGHT // 3 + 30)
     draw_text("UP ARROW: Jump", control_font, pygame.Color('white'), WIDTH // 2, HEIGHT // 3 + 60)
     draw_text("P: Pause/Unpause", control_font, pygame.Color('white'), WIDTH // 2, HEIGHT // 3 + 90)
     draw_text("Press SPACE to start the game", start_font, pygame.Color('white'), WIDTH // 2, HEIGHT - 100)
@@ -133,19 +138,8 @@ def check_volume_control():
         mute_volume()
 
 
-# def volume_sliders(manager):
-#     width, height = 200, 20
-#     x, y = 50, 500
-#
-#     volume_slider = pygame_gui.elements.UIHorizontalSlider(
-#         pygame.Rect((x, y), (width, height)),
-#         .5, (.0, 1), manager=manager
-#     )
-#
-#     return volume_slider
-
-
 def game_loop(scroll):
+    global active
     running = True
     clock = pygame.time.Clock()
 
@@ -157,7 +151,7 @@ def game_loop(scroll):
     coin5 = Coin(coin_img)
     coinsList = [coin1, coin2, coin3, coin4, coin5]
     jumping = False
-    jump_count = 7
+    jump_count = 8
     scroll_change = 0
     coin_imgX_change = 0
     paused = False
@@ -166,6 +160,9 @@ def game_loop(scroll):
         screen.fill((2, 125, 125))
         screen.blit(ground_img, (0, 480))
         scroll += scroll_change
+        obstacle0 = pygame.draw.rect(screen, (255, 255, 255), [obstacles[0], 470, 40, 30])
+        obstacle1 = pygame.draw.rect(screen, (255, 255, 255), [obstacles[1], 470, 40, 30])
+        obstacle2 = pygame.draw.rect(screen, (255, 255, 255), [obstacles[2], 470, 40, 30])
 
         for coin in coinsList:
             coin.x += coin_imgX_change
@@ -184,6 +181,7 @@ def game_loop(scroll):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
                     ball.velocity[0] = -1
@@ -209,6 +207,17 @@ def game_loop(scroll):
                     coin_imgX_change = 0
         check_volume_control()
 
+        for i in range(len(obstacles)):
+            if active:
+                obstacles[i] -= obstacles_speed
+                if obstacles[i] < -20:
+                    obstacles[i] = random.randint(470, 570)
+                ball_circle = pygame.Rect(ball.x - ball.radius, ball.y - ball.radius, 2 * ball.radius,
+                                          2 * ball.radius)
+                if ball_circle.colliderect(obstacle0) or ball_circle.colliderect(
+                        obstacle1) or ball_circle.colliderect(obstacle2):
+                    active = False
+
         if not paused:
             if jumping:
                 if jump_count >= -7:
@@ -229,9 +238,6 @@ def game_loop(scroll):
             coin3.draw(screen)
             coin4.draw(screen)
             coin5.draw(screen)
-
-
-
 
         if paused:
             for event in pygame.event.get():

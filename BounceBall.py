@@ -5,7 +5,7 @@ class Ball:
     def __init__(self):
         self.x = 100
         self.y = 480
-        self.radius = 10
+        self.radius = 20
         self.color = pygame.Color('black')
         self.velocity = [0, 1]  # Adjust as needed
 
