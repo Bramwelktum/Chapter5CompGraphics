@@ -33,6 +33,8 @@ tiles = math.ceil((WIDTH / ground_width)) + 1
 print(tiles)
 scroll = 0
 
+
+
 # Set up fonts
 control_font = pygame.font.Font(None, 24)
 start_font = pygame.font.Font(None, 36)
@@ -72,7 +74,7 @@ def start_menu():
 
 def isCollision(object1X, object2X):
     distance = math.sqrt(math.pow((object1X - object2X), 2) + 0)
-    if distance < 15:
+    if distance < 5:
         return True
     else:
         return False
@@ -160,6 +162,7 @@ def game_loop(scroll):
     jump_count = 7
     scroll_change = 0
     coin_imgX_change = 0
+    score_value = 0
     paused = False
 
     while running:
@@ -167,13 +170,16 @@ def game_loop(scroll):
         screen.blit(ground_img, (0, 480))
         scroll += scroll_change
 
+        score = control_font.render("Score :" + score_value.__str__(), True, (255, 0, 0))
+        screen.blit(score, (10, 10))
+
         for coin in coinsList:
             coin.x += coin_imgX_change
-
             # check if ball and coin collide i.e coin is collected
             coinCollection = isCollision(coin.x, ball.x)
             if coinCollection:
                 coin.x = random.randint(800, 1800)
+                score_value += 1
 
         for i in range(0, tiles):
             screen.blit(ground_img, (i * ground_width + scroll, 480))
