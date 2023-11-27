@@ -21,7 +21,10 @@ Bounce is a Pygame-based platformer game featuring a dynamic and challenging gam
 
 ## Screenshots
 
-Include screenshots or GIFs from your game to showcase its visual appeal.
+![image](https://github.com/GMwanda/bouncegame/assets/98454661/6eeb5304-32ed-4ace-a9dc-2ab969e82bed)
+![image](https://github.com/GMwanda/bouncegame/assets/98454661/4d745c2a-e987-43b9-8a37-a8701b0f7162)
+![image](https://github.com/GMwanda/bouncegame/assets/98454661/97e026e7-c067-42fc-a236-c5ace4ff6355)
+
 
 ## Installation
 
