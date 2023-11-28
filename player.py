@@ -16,7 +16,7 @@ class Ball(pygame.sprite.Sprite):
 		self.rect.x = x
 		self.rect.y = y
 
-		self.jump_height = 15
+		self.jump_height = 17
 		self.speed = 3
 		self.vel = self.jump_height
 		self.mass = 1
