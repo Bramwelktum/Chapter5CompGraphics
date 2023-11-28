@@ -17,7 +17,8 @@ Bounce is a Pygame-based platformer game featuring a dynamic and challenging gam
 - **Left Arrow Key:** Move the player character to the left.
 - **Right Arrow Key:** Move the player character to the right.
 - **Up Arrow Key:** Make the player character jump.
-- **ESC or Q Key:** Quit the game.
+- **Escape Key:** Return to the home screen.
+- **Q Key:** Quit the game.
 
 ## Screenshots
 

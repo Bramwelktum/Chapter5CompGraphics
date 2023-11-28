@@ -178,8 +178,7 @@ def game_loop():
                 running = False
 
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE or \
-                        event.key == pygame.K_q:
+                if event.key == pygame.K_q:
                     running = False
 
             if event.type == pygame.KEYDOWN:
@@ -190,6 +189,14 @@ def game_loop():
                 if event.key == pygame.K_UP:
                     if not p.jump:
                         p.jump = True
+                if event.key == pygame.K_ESCAPE:
+                    if game_page:
+                        home_page = True
+                        controls_page = False
+                        level_page = False
+                        game_page = False
+                        restart_page = False
+                        win_page = False
 
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT:
@@ -224,45 +231,61 @@ def game_loop():
                 level_page = True
 
             # Display control information
-            control_font = pygame.font.Font(health_font, 20)
+            control_font = pygame.font.SysFont('Helvetica', 18)
 
-            title_surface = control_font.render("Controls", True, WHITE)  # Use your color constants
+            title_surface = control_font.render("CONTROLS", True, (0, 0, 0))  # Use your color constants
             screen.blit(title_surface, (WIDTH // 2 - title_surface.get_width() // 2, 20))
 
             control_lines = [
-                "Left Arrow Key ",
-                "to move left",
-                "Right Arrow Key ",
-                "to move right",
-                "Up Arrow Key ",
-                "to jump",
-                "ESC or Q Key ",
-                "to quit the game",
+                "Left Arrow Key - to move left",
+                "Right Arrow Key - to move right",
+                "Up Arrow Key - to jump",
+                "Escape Key - to return to home page",
+                "Q Key - to quit the game",
             ]
 
             line_height = 22
             for index, line in enumerate(control_lines):
-                control_surface = control_font.render(line, True, WHITE)  # Use your color constants
+                control_surface = control_font.render(line, True, (0, 0, 0))  # Use your color constants
                 screen.blit(control_surface, (WIDTH // 2 - control_surface.get_width() // 2, 80 + index * line_height))
 
+        # LEVELS LOCKED
+        # if level_page:
+        #     select_level_text.update(shadow=False)
+        #     for index, btn in enumerate(level_btns):
+        #         if index < level:
+        #             if not btn.unlocked:
+        #                 btn.unlocked = True
+        #                 btn.update_image(level_unlocked_img)
+        #         if btn.draw(screen):
+        #             if index < level:
+        #                 click_fx.play()
+        #                 level_page = False
+        #                 game_page = True
+        #                 level = index + 1
+        #                 screen_scroll = 0
+        #                 level_scroll = 0
+        #                 health = 3
+        #                 world_data, level_length, w = reset_level_data(level)
+        #                 p, moving_left, moving_right = reset_player_data(level)
+
+        # LEVELS UNLOCKED
         if level_page:
             select_level_text.update(shadow=False)
             for index, btn in enumerate(level_btns):
-                if index < level:
-                    if not btn.unlocked:
-                        btn.unlocked = True
-                        btn.update_image(level_unlocked_img)
+                if not btn.unlocked:
+                    btn.unlocked = True
+                    btn.update_image(level_unlocked_img)
                 if btn.draw(screen):
-                    if index < level:
-                        click_fx.play()
-                        level_page = False
-                        game_page = True
-                        level = index + 1
-                        screen_scroll = 0
-                        level_scroll = 0
-                        health = 3
-                        world_data, level_length, w = reset_level_data(level)
-                        p, moving_left, moving_right = reset_player_data(level)
+                    click_fx.play()
+                    level_page = False
+                    game_page = True
+                    level = index + 1
+                    screen_scroll = 0
+                    level_scroll = 0
+                    health = 3
+                    world_data, level_length, w = reset_level_data(level)
+                    p, moving_left, moving_right = reset_player_data(level)
 
         if restart_page:
             screen.blit(game_lost_img, (45, 20))
